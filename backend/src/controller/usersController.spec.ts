@@ -181,7 +181,7 @@ describe('updateUser', () => {
         expect(res.json).toHaveBeenCalledWith({ message: 'Member updated successfully' });
     });
 
-    it('should handle errors gracefully', async () => {
+    it('should handle errors', async () => {
         const connectMock = jest.spyOn(mssql, 'connect').mockRejectedValueOnce(new Error('Database connection error') as never);
 
         await updateUser(req as Request, res as Response);
@@ -202,7 +202,7 @@ describe('deleteUser', () => {
     beforeEach(() => {
         req = {
             params: {
-                member_id: '123456789', 
+                member_id: 'a55daeb0-2d83-4c4f-9bba-c722c4de195c', 
             },
         };
 
@@ -229,7 +229,7 @@ describe('deleteUser', () => {
         expect(res.json).toHaveBeenCalledWith({ message: 'Member deleted successfully' });
     });
 
-    it('should handle errors gracefully', async () => {
+    it('should handle errors', async () => {
      
         const connectMock = jest.spyOn(mssql, 'connect').mockRejectedValueOnce(new Error('Database connection error') as never);
 
