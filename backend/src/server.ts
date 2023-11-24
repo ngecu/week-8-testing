@@ -17,7 +17,9 @@ app.use((error: Error, req:Request, res:Response, next:NextFunction)=>{
     })
 })
 
-app.listen(4400, ()=>{
+const PORT = 4400
+
+app.listen(PORT, ()=>{
     console.log("Server running on port 4400");
 })
 
