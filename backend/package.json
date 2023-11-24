@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/server.js",
   "scripts": {
-    "test": "jest --watchAll",
+    "test": "jest",
     "start:build": "tsc -w",
     "start:run": "nodemon dist/server.js",
     "start": "concurrently npm:start:*"
@@ -16,6 +16,7 @@
     "@babel/preset-env": "^7.23.3",
     "@types/bcrypt": "^5.0.1",
     "@types/cors": "^2.8.15",
+    "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.20",
     "@types/joi": "^17.2.3",
     "@types/jsonwebtoken": "^9.0.4",

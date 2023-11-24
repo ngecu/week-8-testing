@@ -71,19 +71,19 @@ describe("Get One Member", () => {
     it("successfully retrieves a member", async () => {
         const req = {
             params: {
-                id: "example_member_id"
+                id: "a55daeb0-2d83-4c4f-9bba-c722c4de195c"
             }
         };
 
         const mockedRecordset = [
          
             {
-                member_id: "example_member_id",
-                firstName: "Example",
-                lastName: "Member",
-                email: "example.member@thejitu.com",
+                member_id: "a55daeb0-2d83-4c4f-9bba-c722c4de195c",
+                firstName: "Robinson",
+                lastName: "Ngecu",
+                email: "robinson.ngecu@thejitu.com",
                 cohortNumber: 17,
-                role: "Member"
+                role: "member"
             }
         ];
 
@@ -98,7 +98,7 @@ describe("Get One Member", () => {
 
         jest.spyOn(mssql, 'connect').mockResolvedValue(mockedPool as never);
 
-        await getOneUser(req as Request, res as any);
+        await getOneUser(req as unknown as Request, res as any);
 
         // Assertions
         expect(res.json).toHaveBeenCalledWith({
@@ -112,7 +112,7 @@ describe("Get One Member", () => {
     it("handles errors", async () => {
         const req = {
             params: {
-                id: "example_member_id"
+                id: "a55daeb0-2d83-4c4f-9bba-c722c4de195cas_with_error"
             }
         };
 
@@ -128,7 +128,7 @@ describe("Get One Member", () => {
 
         jest.spyOn(mssql, 'connect').mockResolvedValue(mockedPoolWithError as never);
 
-        await getOneUser(req as Request, res as any);
+        await getOneUser(req as unknown as Request, res as any);
 
         // Assertions
         expect(res.json).toHaveBeenCalledWith({
@@ -149,12 +149,12 @@ describe('updateUser', () => {
     beforeEach(() => {
         req = {
             params: {
-                member_id: '123456789', 
+                member_id: 'a55daeb0-2d83-4c4f-9bba-c722c4de195c', 
             },
             body: {
-                firstName: 'John',
-                lastName: 'Doe',
-                email: 'john.doe@example.com',
+                firstName: 'Jenniffer',
+                lastName: 'Kalunda',
+                email: 'robinson.ngecu@thejitu.com',
                 cohortNumber: 17,
             },
         };
@@ -182,7 +182,7 @@ describe('updateUser', () => {
     });
 
     it('should handle errors gracefully', async () => {
-        const connectMock = jest.spyOn(mssql, 'connect').mockRejectedValueOnce(new Error('Database connection error'));
+        const connectMock = jest.spyOn(mssql, 'connect').mockRejectedValueOnce(new Error('Database connection error') as never);
 
         await updateUser(req as Request, res as Response);
 
@@ -231,7 +231,7 @@ describe('deleteUser', () => {
 
     it('should handle errors gracefully', async () => {
      
-        const connectMock = jest.spyOn(mssql, 'connect').mockRejectedValueOnce(new Error('Database connection error'));
+        const connectMock = jest.spyOn(mssql, 'connect').mockRejectedValueOnce(new Error('Database connection error') as never);
 
         await deleteUser(req as Request, res as Response);
 

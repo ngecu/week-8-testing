@@ -6,7 +6,5 @@ CREATE TABLE Members (
     cohortNumber INT NOT NULL,
     password VARCHAR(200) NOT NULL,
     role VARCHAR(20) DEFAULT 'member',
-    welcomed BIT DEFAULT 0,
-    isDeleted BIT DEFAULT 0,
     PRIMARY KEY (member_id)
 );

@@ -42,12 +42,13 @@ export const registerUser = async (req: Request, res: Response) => {
 
 export const getOneUser = async (req: Request, res: Response) => {
     try {
+        console.log(req.params);
+        
         let id = req.params.id;
 
         const pool = await mssql.connect(sqlConfig);
 
         let member = (await pool.request().input('member_id', id).execute('fetchOneMember')).recordset;
-        // Adjust the stored procedure name ('fetchOneMember') based on your actual implementation
 
         return res.status(200).json({
             member: member

@@ -4,30 +4,30 @@ Content-Type: application/json
 {
     "firstName": "Robinson",
     "lastName":"Ngecu",
-    "email": "ngecu16@yopmail.com",
+    "email": "robinson.ngecu@thejitu.com",
     "cohortNumber": 7,
     "password": "I@mrich254"
 }
 
 
-
-GET http://localhost:4400/user/4098b7ca-4cd3-42f0-9504-78d94f59f162
+###
+GET http://localhost:4400/user/a55daeb0-2d83-4c4f-9bba-c722c4de195c
 Content-Type: application/json
 
 
-
-PUT http://localhost:4400/user/4098b7ca-4cd3-42f0-9504-78d94f59f162
+###
+PUT http://localhost:4400/user/a55daeb0-2d83-4c4f-9bba-c722c4de195c
 Content-Type: application/json
 
 
 {
-    "firstName": "Robinson",
-    "lastName":"Ngecu",
-    "email": "ngecu16@yopmail.com",
-    "cohortNumber": 7,
+    "firstName": "Jenniffer",
+    "lastName":"Kalunda",
+    "email": "robinson.ngecu@thejitu.com",
+    "cohortNumber": 7
 }
 
-
+###
 DELETE http://localhost:4400/user/4098b7ca-4cd3-42f0-9504-78d94f59f162
 Content-Type: application/json
 
