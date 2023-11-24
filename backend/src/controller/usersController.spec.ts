@@ -1,8 +1,6 @@
 import mssql from 'mssql'
 import bcrypt from 'bcrypt'
-import jwt from 'jsonwebtoken'
-import {v4} from 'uuid'
-import { getOneUser, registerUser } from './usersController'
+import { deleteUser, getOneUser, registerUser, updateUser } from './usersController'
 import { Request, Response } from 'express'
 
 describe("User Registration", () => {
@@ -44,7 +42,7 @@ describe("User Registration", () => {
 
         jest.spyOn(mssql, 'connect').mockResolvedValue(mockedPool as never)
 
-        await registerUser(req as Request, res as any);
+        await registerUser(req as Request, res as never);
 
         // Assertions
 
@@ -78,7 +76,7 @@ describe("Get One Member", () => {
         };
 
         const mockedRecordset = [
-            // Mock your expected member data here
+         
             {
                 member_id: "example_member_id",
                 firstName: "Example",
@@ -142,3 +140,104 @@ describe("Get One Member", () => {
 
 
 
+jest.mock('mssql');
+
+describe('updateUser', () => {
+    let req: Partial<Request>;
+    let res: Partial<Response>;
+
+    beforeEach(() => {
+        req = {
+            params: {
+                member_id: '123456789', 
+            },
+            body: {
+                firstName: 'John',
+                lastName: 'Doe',
+                email: 'john.doe@example.com',
+                cohortNumber: 17,
+            },
+        };
+
+        res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn(),
+        };
+    });
+
+    it('should update a member successfully', async () => {
+        const connectMock = jest.spyOn(mssql, 'connect').mockResolvedValueOnce({
+            request: jest.fn().mockResolvedValueOnce({
+                input: jest.fn().mockReturnThis(),
+                execute: jest.fn().mockResolvedValueOnce({}),
+            }),
+        } as never);
+
+        await updateUser(req as Request, res as Response);
+
+        // Assertions
+        expect(connectMock).toHaveBeenCalled();
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith({ message: 'Member updated successfully' });
+    });
+
+    it('should handle errors gracefully', async () => {
+        const connectMock = jest.spyOn(mssql, 'connect').mockRejectedValueOnce(new Error('Database connection error'));
+
+        await updateUser(req as Request, res as Response);
+
+        // Assertions
+        expect(connectMock).toHaveBeenCalled();
+        expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.json).toHaveBeenCalledWith({ error: expect.any(Error) });
+    });
+});
+
+
+
+describe('deleteUser', () => {
+    let req: Partial<Request>;
+    let res: Partial<Response>;
+
+    beforeEach(() => {
+        req = {
+            params: {
+                member_id: '123456789', 
+            },
+        };
+
+        res = {
+            status: jest.fn().mockReturnThis(),
+            json: jest.fn(),
+        };
+    });
+
+    it('should delete a member successfully', async () => {
+
+        const connectMock = jest.spyOn(mssql, 'connect').mockResolvedValueOnce({
+            request: jest.fn().mockResolvedValueOnce({
+                input: jest.fn().mockReturnThis(),
+                execute: jest.fn().mockResolvedValueOnce({}),
+            }),
+        } as never);
+
+        await deleteUser(req as Request, res as Response);
+
+        // Assertions
+        expect(connectMock).toHaveBeenCalled();
+        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.json).toHaveBeenCalledWith({ message: 'Member deleted successfully' });
+    });
+
+    it('should handle errors gracefully', async () => {
+     
+        const connectMock = jest.spyOn(mssql, 'connect').mockRejectedValueOnce(new Error('Database connection error'));
+
+        await deleteUser(req as Request, res as Response);
+
+        // Assertions
+        expect(connectMock).toHaveBeenCalled();
+        expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.json).toHaveBeenCalledWith({ error: expect.any(Error) });
+    });
+});

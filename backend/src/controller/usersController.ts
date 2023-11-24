@@ -3,14 +3,12 @@ import mssql from 'mssql'
 import {v4} from 'uuid'
 import bcrypt from 'bcrypt'
 import { sqlConfig } from '../config/sqlConfig'
-
-
  
 export const registerUser = async (req: Request, res: Response) => {
     try {
         const { firstName, lastName, email, cohortNumber, password } = req.body;
 
-        // Validate email format
+  
         const emailRegex = /^[a-zA-Z0-9._-]+@thejitu\.com$/;
         if (!emailRegex.test(email)) {
             return res.status(400).json({
@@ -98,7 +96,6 @@ export const deleteUser = async (req: Request, res: Response) => {
         const result = await pool.request()
             .input("member_id", member_id)
             .execute("deleteMember");
-        // Adjust the stored procedure name ('deleteMember') based on your actual implementation
 
         console.log(result);
 
