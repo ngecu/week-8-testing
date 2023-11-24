@@ -42,71 +42,73 @@ export const registerUser = async (req: Request, res: Response) => {
     }
 };
 
-export const getOneUser = async(req:Request, res:Response)=>{
+export const getOneUser = async (req: Request, res: Response) => {
     try {
+        let id = req.params.id;
 
-        let id = req.params.id 
+        const pool = await mssql.connect(sqlConfig);
 
-        const pool = await mssql.connect(sqlConfig)
-
-        let employee = (await pool.request().input('employee_id',id).execute('fetchOneEmployee')).recordset
-        // let employees = (await pool.request().query('SELECT * FROM Employees')).recordset
+        let member = (await pool.request().input('member_id', id).execute('fetchOneMember')).recordset;
+        // Adjust the stored procedure name ('fetchOneMember') based on your actual implementation
 
         return res.status(200).json({
-            employee: employee
-        })
-        
+            member: member
+        });
+
     } catch (error) {
-        return res.json({
+        return res.status(500).json({
             error: error
-        })
+        });
     }
-}
+};
 
-export const updateUser = async (req: Request, res:Response)=>{
+export const updateUser = async (req: Request, res: Response) => {
     try {
-        
-        let {employee_id} = req.params
-        let {isDeleted} = req.body
+        let { member_id } = req.params;
+        let { firstName, lastName, email, cohortNumber } = req.body;
 
-        const pool = await mssql.connect(sqlConfig)
+        const pool = await mssql.connect(sqlConfig);
 
         const result = await pool.request()
-        .input("employee_id", employee_id) 
-        .input("isDeleted", isDeleted)
-        .execute("deleteEmployee")
-        
+            .input("member_id", member_id)
+            .input("firstName", mssql.VarChar, firstName)
+            .input("lastName", mssql.VarChar, lastName)
+            .input("email", mssql.VarChar, email)
+            .input("cohortNumber", mssql.Int, cohortNumber)
+            .execute("updateMember");
+
         console.log(result);
 
-        return res.json({message: result})
+        return res.json({ message: 'Member updated successfully' });
 
     } catch (error) {
-        return res.json({
+        return res.status(500).json({
             error: error
-        })
+        });
     }
-}
+};
 
-export const deleteUser = async (req: Request, res:Response)=>{
+
+export const deleteUser = async (req: Request, res: Response) => {
     try {
-        
-        let {employee_id} = req.params
-        let {isDeleted} = req.body
+        let { member_id } = req.params;
 
-        const pool = await mssql.connect(sqlConfig)
+        const pool = await mssql.connect(sqlConfig);
 
         const result = await pool.request()
-        .input("employee_id", employee_id) 
-        .input("isDeleted", isDeleted)
-        .execute("deleteEmployee")
-        
+            .input("member_id", member_id)
+            .execute("deleteMember");
+        // Adjust the stored procedure name ('deleteMember') based on your actual implementation
+
         console.log(result);
 
-        return res.json({message: result})
+        return res.json({ message: 'Member deleted successfully' });
 
     } catch (error) {
-        return res.json({
+        return res.status(500).json({
             error: error
-        })
+        });
     }
-}
+};
+
+
