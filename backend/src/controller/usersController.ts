@@ -42,7 +42,7 @@ export const registerUser = async (req: Request, res: Response) => {
 
 export const getOneUser = async (req: Request, res: Response) => {
     try {
-        console.log(req.params);
+        // console.log(req.params);
         
         let {member_id} = req.params;
 
@@ -76,9 +76,9 @@ export const updateUser = async (req: Request, res: Response) => {
             .input("cohortNumber", mssql.Int, cohortNumber)
             .execute("updateMember");
 
-        console.log(result);
+        // console.log(result);
 
-        return res.json({ message: 'Member updated successfully' });
+        return res.status(200).json({ message: 'Member updated successfully' });
 
     } catch (error) {
         return res.status(500).json({
@@ -92,7 +92,7 @@ export const deleteUser = async (req: Request, res: Response) => {
     try {
         let { member_id } = req.params;
 
-        console.log(req.params);
+        // console.log(req.params);
         
 
         const pool = await mssql.connect(sqlConfig);
@@ -101,9 +101,9 @@ export const deleteUser = async (req: Request, res: Response) => {
             .input("member_id",mssql.VarChar, member_id)
             .execute("deleteMember");
 
-        console.log(result);
+        // console.log(result);
 
-        return res.json({ message: 'Member deleted successfully' });
+        return res.status(200).json({ message: 'Member deleted successfully' });
 
     } catch (error) {
         return res.status(500).json({

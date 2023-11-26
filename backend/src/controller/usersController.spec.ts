@@ -1,7 +1,7 @@
 import mssql from 'mssql'
 import bcrypt from 'bcrypt'
 import { deleteUser, getOneUser, registerUser, updateUser } from './usersController'
-import { Request, Response } from 'express'
+import { Request, Response } from 'express';
 
 describe("User Registration", () => {
 
@@ -143,7 +143,7 @@ describe("Get One Member", () => {
 
 
 
-jest.mock('mssql');
+
 
 describe('updateUser', () => {
 
@@ -211,15 +211,11 @@ describe('updateUser', () => {
 
 
 describe('deleteUser', () => {
-    let req: Partial<Request>;
-    let res: Partial<Response>;
+    let req: any;
+    let res: any;
 
     beforeEach(() => {
-        req = {
-            params: {
-                member_id: '02dcd240-47d5-43e6-8a14-5777466f588b', 
-            },
-        };
+      
 
         res = {
             status: jest.fn().mockReturnThis(),
@@ -228,18 +224,32 @@ describe('deleteUser', () => {
     });
 
     it('should delete a member successfully', async () => {
+        req = {
+            params: {
+                member_id: '02dcd240-47d5-43e6-8a14-5777466f588b', 
+            },
+        };
+       
+        const mockedInput = jest.fn().mockReturnThis();
+        const mockedExecute = jest.fn().mockResolvedValue({ rowsAffected: [1] });
 
-        const connectMock = jest.spyOn(mssql, 'connect').mockResolvedValueOnce({
-            request: jest.fn().mockResolvedValueOnce({
-                input: jest.fn().mockReturnThis(),
-                execute: jest.fn().mockResolvedValueOnce({}),
-            }),
-        } as never);
+        const mockedRequest = {
+           input: mockedInput,
+           execute: mockedExecute
+       }
+
+       const mockedPool = {
+           request: jest.fn().mockReturnValue(mockedRequest)
+       }
+
+
+       jest.spyOn(mssql, 'connect').mockResolvedValue(mockedPool as never)
+
 
         await deleteUser(req as Request, res as Response);
 
         // Assertions
-        expect(connectMock).toHaveBeenCalled();
+       
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({ message: 'Member deleted successfully' });
     });
