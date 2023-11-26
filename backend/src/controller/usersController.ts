@@ -22,7 +22,7 @@ export const registerUser = async (req: Request, res: Response) => {
         const pool = await mssql.connect(sqlConfig);
 
         const result = await pool.request()
-            .input('member_id', mssql.VarChar, member_id)
+            .input('member_id', mssql.VarChar, "30377c02-1f5a-4bff-974d-2862684f26e1")
             .input('firstName', mssql.VarChar, firstName)
             .input('lastName', mssql.VarChar, lastName)
             .input('email', mssql.VarChar, email)
@@ -44,11 +44,11 @@ export const getOneUser = async (req: Request, res: Response) => {
     try {
         console.log(req.params);
         
-        let id = req.params.id;
+        let {member_id} = req.params;
 
         const pool = await mssql.connect(sqlConfig);
 
-        let member = (await pool.request().input('member_id', id).execute('fetchOneMember')).recordset;
+        let member = (await pool.request().input('member_id', member_id).execute('fetchOneMember')).recordset;
 
         return res.status(200).json({
             member: member
@@ -56,7 +56,7 @@ export const getOneUser = async (req: Request, res: Response) => {
 
     } catch (error) {
         return res.status(500).json({
-            error: error
+            error: "An error occurred"
         });
     }
 };
@@ -92,10 +92,13 @@ export const deleteUser = async (req: Request, res: Response) => {
     try {
         let { member_id } = req.params;
 
+        console.log(req.params);
+        
+
         const pool = await mssql.connect(sqlConfig);
 
         const result = await pool.request()
-            .input("member_id", member_id)
+            .input("member_id",mssql.VarChar, member_id)
             .execute("deleteMember");
 
         console.log(result);

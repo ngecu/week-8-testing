@@ -16,7 +16,7 @@ Content-Type: application/json
 
 
 ###
-PUT http://localhost:4400/user/a55daeb0-2d83-4c4f-9bba-c722c4de195c
+PUT http://localhost:4400/user/02dcd240-47d5-43e6-8a14-5777466f588b
 Content-Type: application/json
 
 
@@ -28,9 +28,5 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:4400/user/4098b7ca-4cd3-42f0-9504-78d94f59f162
+DELETE http://localhost:4400/user/a55daeb0-2d83-4c4f-9bba-c722c4de195c
 Content-Type: application/json
-
-{
-    "isDeleted": true
-}

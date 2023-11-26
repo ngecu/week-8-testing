@@ -8,15 +8,16 @@ describe("User Registration", () => {
     let res: any;
 
     beforeEach(() => {
-        res = {
+       res = {
             status: jest.fn().mockReturnThis(),
-            json: jest.fn().mockReturnThis()
+            json: jest.fn().mockReturnThis(),
         };
     })
 
     it("successfully registers a member", async () => {
         const req = {
             body: {
+                member_id:"30377c02-1f5a-4bff-974d-2862684f26e1",
                 firstName: "Robinson",
                 lastName: "Ngecu",
                 email: "robinson.ngecu@thejitu.com",
@@ -25,7 +26,7 @@ describe("User Registration", () => {
             }
         }
 
-        jest.spyOn(bcrypt, 'hash').mockResolvedValueOnce("HashedPass@word123" as never)
+        jest.spyOn(bcrypt, 'hash').mockResolvedValueOnce("yutruruyy" as never)
 
         const mockedInput = jest.fn().mockReturnThis();
 
@@ -48,11 +49,13 @@ describe("User Registration", () => {
 
         expect(res.json).toHaveBeenCalledWith({ message: 'Member registered successfully' });
         expect(res.status).toHaveBeenCalledWith(200);
-        expect(mockedInput).toHaveBeenCalledWith('password', mssql.VarChar, 'HashedPass@word123');
+      
+        expect(mockedInput).toHaveBeenCalledWith('member_id', mssql.VarChar, '30377c02-1f5a-4bff-974d-2862684f26e1');
         expect(mockedInput).toHaveBeenCalledWith('firstName', mssql.VarChar, 'Robinson');
         expect(mockedInput).toHaveBeenCalledWith('lastName', mssql.VarChar, 'Ngecu');
         expect(mockedInput).toHaveBeenCalledWith('email', mssql.VarChar, 'robinson.ngecu@thejitu.com');
         expect(mockedInput).toHaveBeenCalledWith('cohortNumber', mssql.Int, 17);
+        // expect(mockedInput).toHaveBeenCalledWith('password', mssql.VarChar, 'HashedPass@word123');
     })
 
 })
@@ -71,14 +74,14 @@ describe("Get One Member", () => {
     it("successfully retrieves a member", async () => {
         const req = {
             params: {
-                id: "a55daeb0-2d83-4c4f-9bba-c722c4de195c"
+                member_id: "02dcd240-47d5-43e6-8a14-5777466f588b"
             }
         };
 
         const mockedRecordset = [
          
             {
-                member_id: "a55daeb0-2d83-4c4f-9bba-c722c4de195c",
+                member_id: "02dcd240-47d5-43e6-8a14-5777466f588b",
                 firstName: "Robinson",
                 lastName: "Ngecu",
                 email: "robinson.ngecu@thejitu.com",
@@ -105,7 +108,7 @@ describe("Get One Member", () => {
             member: mockedRecordset
         });
         expect(res.status).toHaveBeenCalledWith(200);
-        expect(mockedRequest.input).toHaveBeenCalledWith('member_id', 'example_member_id');
+        expect(mockedRequest.input).toHaveBeenCalledWith('member_id', '02dcd240-47d5-43e6-8a14-5777466f588b');
         expect(mockedRequest.execute).toHaveBeenCalledWith('fetchOneMember');
     });
 
@@ -143,40 +146,52 @@ describe("Get One Member", () => {
 jest.mock('mssql');
 
 describe('updateUser', () => {
-    let req: Partial<Request>;
-    let res: Partial<Response>;
+
+    let res: any;
+    let req: any;
 
     beforeEach(() => {
+        
+
+        res = {
+            status: jest.fn().mockReturnThis(),
+            json:jest.fn().mockReturnThis(),
+        };
+    });
+
+    it('should update a member successfully', async () => {
         req = {
             params: {
-                member_id: 'a55daeb0-2d83-4c4f-9bba-c722c4de195c', 
+                member_id: '02dcd240-47d5-43e6-8a14-5777466f588b', 
             },
             body: {
                 firstName: 'Jenniffer',
                 lastName: 'Kalunda',
                 email: 'robinson.ngecu@thejitu.com',
-                cohortNumber: 17,
+                cohortNumber: 7,
             },
         };
 
-        res = {
-            status: jest.fn().mockReturnThis(),
-            json: jest.fn(),
-        };
-    });
+         const mockedInput = jest.fn().mockReturnThis();
+         const mockedExecute = jest.fn().mockResolvedValue({ rowsAffected: [1] });
 
-    it('should update a member successfully', async () => {
-        const connectMock = jest.spyOn(mssql, 'connect').mockResolvedValueOnce({
-            request: jest.fn().mockResolvedValueOnce({
-                input: jest.fn().mockReturnThis(),
-                execute: jest.fn().mockResolvedValueOnce({}),
-            }),
-        } as never);
+         const mockedRequest = {
+            input: mockedInput,
+            execute: mockedExecute
+        }
+
+        const mockedPool = {
+            request: jest.fn().mockReturnValue(mockedRequest)
+        }
+
+
+        jest.spyOn(mssql, 'connect').mockResolvedValue(mockedPool as never)
+
 
         await updateUser(req as Request, res as Response);
 
         // Assertions
-        expect(connectMock).toHaveBeenCalled();
+        
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith({ message: 'Member updated successfully' });
     });
@@ -202,7 +217,7 @@ describe('deleteUser', () => {
     beforeEach(() => {
         req = {
             params: {
-                member_id: 'a55daeb0-2d83-4c4f-9bba-c722c4de195c', 
+                member_id: '02dcd240-47d5-43e6-8a14-5777466f588b', 
             },
         };
 

@@ -19,16 +19,16 @@ export const sqlConfig = {
   },
 };
 
-export async function testConnection() {
+// export async function testConnection() {
 
 
-  const pool = await mssql.connect(sqlConfig);
+//   const pool = await mssql.connect(sqlConfig);
 
-  if (pool.connected) {
-    console.log("connected to database");
-  } else {
-    console.log("connection failed");
-  }
-}
+//   if (pool.connected) {
+//     console.log("connected to database");
+//   } else {
+//     console.log("connection failed");
+//   }
+// }
 
-testConnection()
+// testConnection()
